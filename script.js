@@ -1,60 +1,155 @@
-console.log("Week 4 - class assignment");
+console.log("Week 6 - homework - Hand-in assignment 2");
 
-const orderFoodFromDifferentRestaurants = (restaurantName, foodName, amountOfFood) => `You are ordering ${amountOfFood} ${foodName} from ${restaurantName}`;
+// Week 6 - homework - Hand-in assignment 2
+// A. Let’s improve our counter
+// a. Disable the ‘-’ button whenever the counter reaches 0 (keep in mind that it only should be disabled if the counter is on 0)
+// b. Add a span element saying “You have free shipping” whenever the counter reaches 10
+// c. Change the ‘+’ button’s background to red whenever the counter reaches 20
 
-console.log(orderFoodFromDifferentRestaurants("Omo's Pizza", "Chicken Pizza", 5));
+// B. Bonus
+// a. Remove the Free shipping span whenever the counter reaches 9, or if it reaches 20
+// b. Additionally, whenever it reaches 20, add a span saying “Out of stock”
 
-// **************
+const mainElement = document.querySelector("main");
+const createNewOuterDivElement = document.createElement("div");
+mainElement.appendChild(createNewOuterDivElement);
 
-// A. Create 3 HTML element divs
-// a. Add some text to 
+const createFirstInnerDivElement = document.createElement("div");
+createNewOuterDivElement.appendChild(createFirstInnerDivElement);
 
-const first_div_element = document.getElementById("first_div");
+const createSecondInnerDivElement = document.createElement("div");
 
-// Not working
-// Can get only array of Elements - can not apply style on this fetched variable.
-// const second_div_element = document.getElementsByClassName("second_div");
+createNewOuterDivElement.classList.add("div_outer_container", "flex-container");
+createFirstInnerDivElement.classList.add("div_first_inner_container", "flex-container");
+createSecondInnerDivElement.classList.add("div_second_inner_container", "flex-container");
 
-// Working - to apply background color on the element
-const second_div_element = document.querySelector(".second_div");
+const createPElementToDisplayResult = document.createElement("p");
+createPElementToDisplayResult.classList.add("display_result", "flex-container");
 
-// Not working
-// Can get only array of Elements - can not apply style on this fetched variable.
-// const third_div_element = document.getElementsByTagName("div");
+const createPlusButton = document.createElement("button");
+const createMinusButton = document.createElement("button");
+const createResetButton = document.createElement("button");
 
-// Working - grabbin the first div
-// const third_div_element = document.querySelector("div");
-const third_div_element = document.querySelectorAll("div")[2];
+createFirstInnerDivElement.appendChild(createPElementToDisplayResult);
 
-const read_more_button_element = document.getElementById("read_more_button");
+createFirstInnerDivElement.appendChild(createSecondInnerDivElement);
+createSecondInnerDivElement.appendChild(createPlusButton);
+createSecondInnerDivElement.appendChild(createMinusButton);
+createSecondInnerDivElement.appendChild(createResetButton);
 
-console.log(first_div_element);
-// first_div_element.innerHTML = "Test changing content";
+let displayValue = 0;
+const RESET_VALUE = 0;
+const TOP_LIMIT_VALUE = 20;
+const value10 = 10;
 
-console.log(second_div_element);
-console.log(third_div_element);
-console.log(read_more_button_element);
+const updateDisplayCountValue = () => createPElementToDisplayResult.textContent = `${displayValue}`;
 
-read_more_button_element.setAttribute("disabled", true);
+updateDisplayCountValue();
 
-first_div_element.style.height = "100px";
-first_div_element.style.width = "300px";
-first_div_element.style.border = "2px solid red";
-first_div_element.style.backgroundColor = "coral";
+createPlusButton.textContent = "+";
+createMinusButton.textContent = "-";
+createResetButton.textContent = "Reset";
 
-second_div_element.style.height = "100px";
-second_div_element.style.width = "300px";
-second_div_element.style.border = "2px solid green";
-second_div_element.style.backgroundColor = "#87365e";
+// ---------------------------------------------
+// a. Disable the ‘-’ button whenever the counter reaches 0 (keep in mind that it only should be disabled if the counter is on 0)
+const disableMinusButton = () => {
+  if (displayValue === 0) {
+    return createMinusButton.setAttribute("disabled", true);
+  }
 
-third_div_element.style.height = "100px";
-third_div_element.style.width = "300px";
-third_div_element.style.border = "2px solid blue";
-third_div_element.style.backgroundColor = "#00ff95";
+  return createMinusButton.removeAttribute("disabled", true);
+};
 
-const createDivElement = document.createElement("div");
-const node = document.createTextNode("This is new.");
-const createPElement = document.createElement("p");
-// document.appendChild(createDivElement);
-first_div_element.appendChild(createPElement);
-createPElement.textContent = "New Element";
+disableMinusButton();
+
+// b. Add a span element saying “You have free shipping” whenever the counter reaches 10
+const createSpanElement = document.createElement("span");
+createFirstInnerDivElement.appendChild(createSpanElement);
+
+let updateSpanText = "No free shipping available";
+createSpanElement.textContent = `${updateSpanText}`;
+
+// c. Change the ‘+’ button’s background to red whenever the counter reaches 20
+const changeButtonsBackgroundColor = () => {
+  if (displayValue === TOP_LIMIT_VALUE) {
+    return createPlusButton.style.backgroundColor = "red";
+  }
+
+  return createPlusButton.style.backgroundColor = "";
+};
+
+// B. Bonus
+// a. Remove the Free shipping span whenever the counter reaches 9, or if it reaches 20
+// b. Additionally, whenever it reaches 20, add a span saying “Out of stock”
+const updateSpanContent = () => {
+  if (displayValue >= value10) {
+    updateSpanText = "You have FREE shipping";
+    createSpanElement.textContent = `${updateSpanText}`;
+  }
+
+  if (displayValue < value10 || displayValue === RESET_VALUE) {
+    updateSpanText = "No free shipping available";
+    createSpanElement.textContent = `${updateSpanText}`;
+  }
+
+  if (displayValue >= TOP_LIMIT_VALUE) {
+    updateSpanText = "Out of stock";
+    createSpanElement.textContent = `${updateSpanText}`;
+  }
+
+  return createSpanElement.textContent;
+};
+// ---------------------------------------------
+
+const resetDisplayCountValue = () => {
+  displayValue = RESET_VALUE;
+
+  updateDisplayCountValue();
+  updateSpanContent();
+  changeButtonsBackgroundColor();
+  disableMinusButton();
+
+  return displayValue;
+};
+
+const addCountValue = (num) => {
+  if (displayValue >= TOP_LIMIT_VALUE) {
+    updateSpanContent();
+    changeButtonsBackgroundColor();
+    console.log(`Value is ${displayValue}, you  have reached the top limit value - ${TOP_LIMIT_VALUE} can not increase the number anymore!`);
+    alert(`Value is ${displayValue}, you  have reached the top limit value - ${TOP_LIMIT_VALUE} can not increase the number anymore!`);
+  }
+  else {
+    displayValue = displayValue + num;
+    updateDisplayCountValue();
+    updateSpanContent();
+    changeButtonsBackgroundColor();
+    disableMinusButton();
+  }
+
+  return displayValue;
+};
+
+const subtractCountValue = (num) => {
+  if (displayValue > 0) {
+    updateSpanContent();
+    changeButtonsBackgroundColor();
+    displayValue = displayValue - num;
+  }
+  else {
+    console.log(`Value is ${displayValue}, you can not decrease the number anymore!`);
+    alert(`Value is ${displayValue}, you can not decrease the number anymore!`);
+  }
+
+  updateDisplayCountValue();
+  updateSpanContent();
+  changeButtonsBackgroundColor();
+  disableMinusButton();
+
+  return displayValue;
+};
+
+createPlusButton.addEventListener("click", () => { addCountValue(1); }, false);
+createMinusButton.addEventListener("click", () => { subtractCountValue(1); }, false);
+createResetButton.addEventListener("click", () => { resetDisplayCountValue(); }, false);
+// ---------------------------------------------
